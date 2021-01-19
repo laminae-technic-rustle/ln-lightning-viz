@@ -8,6 +8,8 @@
    - Get some inspiration from non-lightning graphs
    - Decide on home-grown graphing library or existing one
 3. Think of a single new thing that is exciting to learn / to integrate
+   - Identified -- Let's try and use `fp-ts` and see how ergonomic the use of 
+     functional paradigms is within TS
 4. Scaffold (Separate PR)
 5. Build (Separate PR)
 
