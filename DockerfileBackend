@@ -1,0 +1,22 @@
+FROM node:14.15.4-alpine
+
+WORKDIR /opt/app
+
+# Shared files
+COPY package.json package.json
+COPY yarn.lock yarn.lock
+COPY shared shared/
+
+# backend files
+COPY backend/ ./backend
+
+# Enable workspaces
+RUN yarn config set workspaces-experimental true
+
+# Install dependencies (also install dev-deps)
+RUN yarn install --frozen-lockfile --production=false
+
+# Build & Run
+WORKDIR /opt/app/backend
+RUN yarn build
+CMD yarn server

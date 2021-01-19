@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: DockerfileFrontend
+    environment:
+      - NODE_ENV=production
+    ports:
+      - 3000:3000
+    depends_on: 
+      - backend
+    networks:
+      - ln
+  backend:
+    build:
+      context: .
+      dockerfile: DockerfileBackend
+    environment:
+      - NODE_ENV=production
+      - NODE_PORT=8080
+    ports:
+      - 8080:8080
+    networks:
+      - ln
+    tty: true
+
+networks:
+  ln:
+    driver: bridge
