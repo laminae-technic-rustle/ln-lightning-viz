@@ -167,3 +167,65 @@ better representations than JSON. Added bonus would be that it could be
 possible to use something like https://github.com/graphistry/graphistry-js .
 That would involve setting up a server as well, which might be beyond the 
 scope of this specific project. Let's see.
+
+### TS
+I like using things like the `maybe` / `option` monad and `result` monads. 
+In ReasonML this is really natural, due to the extremely strong module system.
+In TS, this seems really weird. The namespace seems odd;
+```typescript
+import FP from "fp-ts";
+
+type r<A> = FP.option.Option<A>;
+let makeOption<A> = (x: A): r<A> => FP.option.some(x);
+let mapX = FP.option.map(x => x);
+```
+The capital / non-capital naming seems rather cumbersome. Same thing in Reason;
+
+```reason
+// idiomatic
+let makeOption = x => Some(x);
+
+// explicit types
+type a;
+type r(a) = option('a)
+let makeOption(a) = (x: a): r(a) => Some(x);
+
+let mapX = Belt.Option.map(x => x);
+```
+
+This is consistent. Type names are lowercase, variants start uppercase, modules
+start uppercase, functions lowercase.
+In TS, the `option` module is lowercase, as are the functions, and the 
+constructors, but the type itself starts uppercase... Some examples show the
+following code, deconstructing the option straigt away, to capital `O`. Not
+sure how I feel about that. That might mean I'll springle single letter 
+modules all over the place. Not where I'd want to be...
+
+```typescript
+import {option as O} from "fp-ts";
+
+type r<A> = O.Option<A>;
+let makeOption<A> = (x: A): r<A> => O.some(x);
+let mapX = O.map(x => x);
+```
+
+For now, and for lack of an idiomatic alternative, let's just resort to 
+individual imports to what we need. I think that will lead to the cleanest code.
+
+```typescript
+import {Option, map, some} from "fp-ts";
+
+type r<A> = Option<A>;
+let makeOption<A> = (x: A): r<A> => some(x);
+let mapX = map(x => x);
+```
+
+### Next.js
+I'm trying to generate the conversion semi-dynamically. ie. once upon startup.
+There are ~7000 nodes in the file and ~33000 edges. It should not take a long
+time to dynamically add those. Unfortunately, it seems some Next.js magic is 
+getting in my way. Calling the api with `getServerSideProps` works, I get
+back my parsed data, but it takes forever on first render. That is not nice.
+
+Since there is no easy way to initialize server state other than a custom 
+server, I'll split out the app to FE / BE.
