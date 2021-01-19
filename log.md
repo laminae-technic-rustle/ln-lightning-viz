@@ -134,6 +134,12 @@ type edge = [id, from, to]; // for even more compaction
 We might change naming slightly if we decide to use some fancy graph library
 that gives most of the stuff for free.
 
+Using an array / tuple based contract might seem brittle at first, but by 
+leveraging something like `yarn workspaces` and a shared folder with api 
+contracts, we should be able to enforce these things at compile time. ReasonML
+will work great with these sort of setups as it has proper tuple types. I'm
+unsure wether Typescript will do the same. We'll have to see.
+
 We'll make a working example out of that. If there is time, we'll build a 
 tiny Node app that allows us to fetch node / edge details by their respective
 id's. The Node app will take the JSON and turn it into a hashmap of nodes
