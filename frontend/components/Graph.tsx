@@ -4,7 +4,7 @@ import { fold, none, some, Option } from "fp-ts/option";
 import { identity, constant, pipe } from "fp-ts/function";
 
 import dynamic from 'next/dynamic'
-const ForceGraph3D = dynamic(() => import('react-force-graph').then(x => x.ForceGraph3D));
+const ForceGraph3D = dynamic(() => import('react-force-graph').then(x => x.ForceGraph3D, e => null as never));
 
 interface Props {
   graph: graph;
