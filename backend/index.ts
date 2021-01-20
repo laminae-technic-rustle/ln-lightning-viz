@@ -4,7 +4,7 @@ import compression from "compression";
 
 import { initState } from "./state";
 
-const port = process.env.NODE_PORT;
+const port = process.env.NODE_PORT || 8080;
 const app = express();
 app.use(cors());
 app.use(compression());
