@@ -155,10 +155,20 @@ relatively easy.
 
 
 ## Graphs
+Graph-wise. There is a lot of crud out there at the moment. Most of the 
+implementations use some form of force-directed graph. While that's pretty, it
+is not necessarily the clearest way to portay this data. But that should
+be rather quick to verify. So the game-plan would be:
+1. Try to get existing force-directed graph to work
+ -- See how it looks. If it looks good, and is quick, fine. If no good UX, 
+    step 2. If too slow, but actually decent, step 3.
+2. Try to see if a circular node-graph works
+3. See if there are faster solutions, using WebGL / Canvas perhaps.
 
-## Scaffold
+Bonus: use 2, but when clicking on either a node or edge, open a new
+window that shows 3.
 
-## Specifics
+
 
 ## Logs
 ### Arrow / Graphistry?
