@@ -47,7 +47,17 @@ type from = nodeId;
 type to = nodeId;
 type edge = [edgeId, from, to];
 
-type graph =  { nodes: node[]; edges: edge[] };
+type graph = { nodes: node[]; edges: edge[] };
 
-export type {jsonNode, jsonEdge, jsonGraph, node, edge, graph};
+type metadata =
+  {
+    nodeConnections: { [key: string]: number },
+    min: number,
+    average: number,
+    median: number,
+    max: number,
+  }
 
+type graphAndMetaData = { graph: graph, metadata: metadata };
+
+export type { jsonNode, jsonEdge, jsonGraph, node, edge, graph, metadata, graphAndMetaData };

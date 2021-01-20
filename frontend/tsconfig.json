@@ -1,4 +1,5 @@
 {
+  "max-line-length": [true, 80],
   "compilerOptions": {
     "target": "es6",
     "lib": [
