@@ -160,7 +160,7 @@ relatively easy.
 
 ## Specifics
 
-## Thoughs and Ideas
+## Logs
 ### Arrow / Graphistry?
 Since we're dealing with quite a lot of data. Perhaps it's worth looking into
 better representations than JSON. Added bonus would be that it could be 
@@ -229,3 +229,81 @@ back my parsed data, but it takes forever on first render. That is not nice.
 
 Since there is no easy way to initialize server state other than a custom 
 server, I'll split out the app to FE / BE.
+
+### Recapping first stretch
+#### TS vs Reason
+I think there are some things that I overlooked, possibly jamming too much of
+functional stuff into something. Ie, I have a hammer and I'll use it dammit. 
+TS might not be the perfect candidate for that. I feel the type system is
+a bit to flexible for that. In ReasonML, if `x` is type `x`, then it's of `x`, 
+not `x | y`. One place that was very interesting was the `query` endpoint.
+Take the following code:
+```javascript
+export default function handler(req, res) {
+  const {
+    query: { pid },
+  } = req
+
+  res.end(`Post: ${pid}`)
+}
+```
+Apart from their horrible deconstructing (in what universe is the above better
+than the below?
+```javascript
+ const { pid } = req.query;
+```
+What is the type of `pid`? I would expect `string`, but TS errored on that, and
+told me it's `string | Array<string>`. The only way to then go about checking
+which it is, is to typecheck, and then you're right back to the `Array.isArray`
+days. Worst of all, it's not even correct, because it can be `null`, and it can
+be `undefined`. So I still have to check wether the thing TS says it is, is 
+actually what it is... Wet?
+
+In ReasonML you'd type it like:
+```reason
+type queryPid = | String(string) | StringArray(array(string))
+
+// and query
+
+type req = {
+  query: option(queryPid);
+}
+```
+How is this better?
+- I can pattern match
+- I can map over my optional value, and get it out with a default, it's 
+extremely explicit that I should not presume it's always there.
+- My value is optional, so when it's there, I know it is. No null checks;
+
+```Reason
+let doSomethingWithQueryPid = x =>
+  switch(x) {
+    | String(x) => x // My string
+    | StringArray(xs) => xs // My list
+  };
+```
+
+/endrant. 
+Perhaps this is all just Next.js's fault for not encoding types properly...
+
+#### Next steps
+I did some research into graphs. Will add that to the top section of 
+[Graph](#graph). I also did not do much FE work. So let's start by abstracting
+away the async logic into an async component, and properly encode the 
+optionality of the fetched graph.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
