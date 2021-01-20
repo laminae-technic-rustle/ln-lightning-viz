@@ -18,7 +18,7 @@ const progress = {
 
 const initState = (): state => {
   console.log("\n **** Started - Parsing Nodes **** \n");
-  progress.node.start(jGraph.nodes.length, 0);
+  progress.node.start(jGraph.nodes.length - 1, 0);
 
   const nodeArray = jGraph.nodes.reduce((acc, jsonN: jsonNode, i) => {
     progress.node.update(i);
@@ -29,7 +29,7 @@ const initState = (): state => {
   console.log("\n **** Finished - Parsing Nodes **** \n");
 
   console.log("\n **** Started - Parsing Edges **** \n");
-  progress.edge.start(jGraph.edges.length, 0);
+  progress.edge.start(jGraph.edges.length - 1, 0);
 
   const edgeArray = jGraph.edges.reduce((acc, jsonE: jsonEdge, i) => {
     progress.edge.update(i);

@@ -2,29 +2,17 @@ import Head from "next/head";
 import React from "react";
 import type { graph, node, edge } from "shared";
 import Graph from "../components/Graph";
+import Async from "../components/Async";
+import Errors from "../components/Errors";
+import { fold, none, some, Option } from "fp-ts/option";
+import { constant, pipe } from "fp-ts/function";
 
-enum State {
-  Initial,
-  Loading,
-  Success,
-  Error,
-};
 
-const baseUrl = "http://localhost:8080" // FIXME -- get from Dockerfile
 
 const Home = () => {
-  let [state, setState] = React.useState(State.Initial);
-  let [graph, setGraph] = React.useState<graph>({nodes: [], edges: []});
+  let [graph, setGraph] = React.useState<Option<graph>>(none);
 
-  React.useEffect(() => {
-    setState(State.Loading);
-    fetch(`${baseUrl}/graph`)
-      .then(res => res.json())
-      .then((graph: graph) => {
-        setGraph(graph);
-        setState(State.Success);
-      })
-  }, []);
+  let handleAsyncGraph = (graph: graph) => setGraph(some(graph));
 
   return (
     <div>
@@ -32,15 +20,17 @@ const Home = () => {
         <title>LN Viewer</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <nav>Some nav</nav>
-      <main>
-        {state === State.Initial && "..."}
-        {state === State.Loading && "Loading"}
-        {state === State.Error && "Error Fetching"}
-        {state === State.Success && <Graph graph={graph} />}
-
-      </main>
-      <footer>Some footer</footer>
+      <Async url="/graph" callback={handleAsyncGraph}>
+        {
+          pipe(
+            graph,
+            fold(
+              constant(<Errors.Unknown />),
+              (graph: graph) => <Graph graph={graph} />
+            )
+          )
+        }
+      </Async>
     </div>
   );
 };
