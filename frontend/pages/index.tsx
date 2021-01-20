@@ -1,8 +1,8 @@
 import Head from "next/head";
 import React from "react";
 import type { graph, node, edge } from "shared";
-import Graph from "../components/Graph";
 import Async from "../components/Async";
+import Graph from "../components/Graph";
 import Errors from "../components/Errors";
 import { fold, none, some, Option } from "fp-ts/option";
 import { constant, pipe } from "fp-ts/function";
