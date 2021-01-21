@@ -10,14 +10,17 @@ enum State {
   Error,
 }
 
-interface Props<Data> {
+type Props<Data> = {
+  children: never[], // Not sure why this is necessary...
   url: string;
+  callback?: (x: Data) => void;
   render: (x: Data) => JSX.Element;
 }
 
 const baseUrl = "http://localhost:8080"; // FIXME -- get from Dockerfile
 const Async = <Data extends unknown>({
   url,
+  callback,
   render,
 }: Props<Data>): JSX.Element => {
   let [data, setData] = React.useState<Option<Data>>(none);
@@ -29,6 +32,7 @@ const Async = <Data extends unknown>({
     fetch(`${baseUrl}${url}`)
       .then((res) => res.json())
       .then((data: Data) => {
+        callback && callback(data);
         setData(some(data));
         setState(State.Success);
       })

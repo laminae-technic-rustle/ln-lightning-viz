@@ -5,14 +5,16 @@ import { Async } from "../components/Async";
 import { Graph } from "../components/Graph";
 import { Sidebar } from "../components/Sidebar";
 import { fold, none, some, Option } from "fp-ts/option";
+import { constant, pipe } from "fp-ts/function";
 
-type viewState = {
+type options = {
   min: number,
   max: number
+  forceMode: "radialin" | "radialout";
 };
 
 const Page = () => {
-  const [options, setOptions] = react.useState<Option<viewState>>(none);
+  const [options, setOptions] = React.useState<Option<options>>(none);
 
   return (
     <>
@@ -22,14 +24,29 @@ const Page = () => {
       </Head>
 
       <Async url="/graph-with-metadata"
-        render={(data: graphAndMetaData) =>
-          {
-            return (<>
-              <Graph graphAndMetaData={data.graph}
-                min={data.metadata.min}
-                max={data.metadata.max} />
-              <Sidebar metadata={data.metadata}/>
-            </>)
+        callback={(data: graphAndMetaData) =>
+          setOptions(some({
+            min: data.metadata.min,
+            max: data.metadata.max,
+            forceMode: "radialin"
+          }))
+        }
+        render={(data: graphAndMetaData) => {
+          return pipe(
+            options,
+            fold(
+              constant(<>Loading</>),
+              (options: options) => <>
+                <Graph graphAndMetaData={data}
+                  options={options} />
+                <Sidebar metadata={data.metadata}
+                  options={options}
+                  setOptions={setOptions}
+                />
+              </>
+            )
+          )
+
         }
         }>
       </Async>
@@ -39,4 +56,5 @@ const Page = () => {
   );
 };
 
+export type { options };
 export default Page;
