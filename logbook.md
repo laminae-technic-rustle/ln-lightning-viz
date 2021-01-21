@@ -293,7 +293,7 @@ let doSomethingWithQueryPid = x =>
   };
 ```
 
-/endrant. 
+/end-rant. 
 Perhaps this is all just Next.js's fault for not encoding types properly...
 
 #### Next steps
@@ -303,6 +303,15 @@ away the async logic into an async component, and properly encode the
 optionality of the fetched graph.
 
 
+### Home Stretch
+Nothing left to do but some tidying-up and some tests. Typescript was a bit
+less in my way today, but there were still some weird things here-and-there.
+Overall, getting the UI setup, with the async component that handles all the 
+calling / state mangling works really well. Makes for simple composition of
+components. Performance is also relatively acceptable. Setting the min-max
+range from the min to the median as a start is nice, then users see something
+quickly, but once they start playing with the sliders, still have the ability
+to go bigger (with the warning in place).
 
 
 
