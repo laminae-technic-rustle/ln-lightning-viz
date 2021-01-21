@@ -12,16 +12,15 @@ enum State {
 
 interface Props<Data> {
   url: string;
-  callback: (x: Data) => void;
-  children: JSX.Element;
+  render: (x: Data) => JSX.Element;
 }
 
 const baseUrl = "http://localhost:8080"; // FIXME -- get from Dockerfile
 const Async = <Data extends unknown>({
   url,
-  callback,
-  children,
+  render,
 }: Props<Data>): JSX.Element => {
+  let [data, setData] = React.useState<Option<Data>>(none);
   let [state, setState] = React.useState(State.Initial);
   let [errMessage, setErrMessage] = React.useState<Option<string>>(none);
 
@@ -30,7 +29,7 @@ const Async = <Data extends unknown>({
     fetch(`${baseUrl}${url}`)
       .then((res) => res.json())
       .then((data: Data) => {
-        callback(data);
+        setData(some(data));
         setState(State.Success);
       })
       .catch((err: string) => {
@@ -44,7 +43,13 @@ const Async = <Data extends unknown>({
     case State.Loading:
       return <>Loading</>;
     case State.Success:
-      return children;
+      return pipe(
+        data,
+        fold(
+          constant(<Errors.Unknown />),
+          (data: Data) => render(data)
+        )
+      )
     case State.Error:
     default:
       return (
@@ -57,4 +62,4 @@ const Async = <Data extends unknown>({
   }
 };
 
-export default Async;
+export { Async };

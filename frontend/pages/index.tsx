@@ -1,38 +1,42 @@
 import Head from "next/head";
 import React from "react";
-import type { graph, node, edge } from "shared";
-import Async from "../components/Async";
-import Graph from "../components/Graph";
-import Errors from "../components/Errors";
+import type { graphAndMetaData, node, edge } from "shared";
+import { Async } from "../components/Async";
+import { Graph } from "../components/Graph";
+import { Sidebar } from "../components/Sidebar";
 import { fold, none, some, Option } from "fp-ts/option";
-import { constant, pipe } from "fp-ts/function";
 
+type viewState = {
+  min: number,
+  max: number
+};
 
-
-const Home = () => {
-  let [graph, setGraph] = React.useState<Option<graph>>(none);
-
-  let handleAsyncGraph = (graph: graph) => setGraph(some(graph));
+const Page = () => {
+  const [options, setOptions] = react.useState<Option<viewState>>(none);
 
   return (
-    <div>
+    <>
       <Head>
         <title>LN Viewer</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Async url="/graph" callback={handleAsyncGraph}>
-        {
-          pipe(
-            graph,
-            fold(
-              constant(<Errors.Unknown />),
-              (graph: graph) => <Graph graph={graph} />
-            )
-          )
+
+      <Async url="/graph-with-metadata"
+        render={(data: graphAndMetaData) =>
+          {
+            return (<>
+              <Graph graphAndMetaData={data.graph}
+                min={data.metadata.min}
+                max={data.metadata.max} />
+              <Sidebar metadata={data.metadata}/>
+            </>)
         }
+        }>
       </Async>
-    </div>
+
+
+    </>
   );
 };
 
-export default Home;
+export default Page;
