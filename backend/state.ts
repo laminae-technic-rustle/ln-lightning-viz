@@ -1,7 +1,6 @@
 import cliProgress from "cli-progress";
-import worker from "worker_threads";
 
-import type { metadata, jsonGraph, jsonNode, jsonEdge, graph, node, edge } from "shared";
+import type { nodeId, metadata, jsonGraph, jsonNode, jsonEdge, graph, node, edge } from "shared";
 
 const jGraph: jsonGraph = require("../lightning_graph.json");
 
@@ -10,6 +9,7 @@ type state = {
   metadata: metadata,
   nodes: { [key: string]: jsonNode },
   edges: { [key: string]: jsonEdge }
+  edgesByNodeId: {[key: string]: jsonEdge[]}
 };
 
 const progress = {
@@ -37,6 +37,7 @@ const initState = (): state => {
   progress.edge.start(jGraph.edges.length - 1, 0);
 
   const edges: { [key: string]: jsonEdge } = {}
+  const edgesByNodeId: { [key: string]: jsonEdge[] } = {}
   const edgeArray: edge[] = [];
   for (let i = 0; i < jGraph.edges.length; i++) {
     progress.edge.update(i);
@@ -44,6 +45,20 @@ const initState = (): state => {
     const { channel_id, node1_pub, node2_pub } = edge;
     edgeArray.push([channel_id, node1_pub, node2_pub])
     edges[channel_id] = edge;
+
+    const edgesByNodeFrom = edgesByNodeId[node1_pub]
+    if(Array.isArray(edgesByNodeFrom)) {
+        edgesByNodeId[node1_pub].push(edge)
+    } else {
+      edgesByNodeId[node1_pub] = [ edge ];
+    }
+
+    const edgesByNodeTo = edgesByNodeId[node2_pub]
+    if(Array.isArray(edgesByNodeTo)) {
+        edgesByNodeId[node2_pub].push(edge)
+    } else {
+      edgesByNodeId[node2_pub] = [ edge ];
+    }
   };
   progress.edge.stop();
 
@@ -81,7 +96,8 @@ const initState = (): state => {
       median,
     },
     nodes,
-    edges
+    edges,
+    edgesByNodeId
   };
 };
 

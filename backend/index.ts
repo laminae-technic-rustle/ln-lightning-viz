@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import compression from "compression";
-import type { edge } from "shared";
 
 import { initState } from "./state";
 
@@ -22,7 +21,7 @@ app.get("/node/:id", (req, res) => {
 });
 
 app.get("/node/:id/edges", (req, res) => {
-  return res.status(200).send(state.graph.edges.filter(([_, source, dest]:edge) => source == req.params.id || dest == req.params.id));
+  return res.status(200).send(state.edgesByNodeId[req.params.id]);
 });
 
 app.get("/edge/:id", (req, res) => {
