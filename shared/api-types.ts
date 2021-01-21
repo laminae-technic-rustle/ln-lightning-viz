@@ -5,7 +5,7 @@ type jsonNode = {
   last_update: unixTimestamp;
   pub_key: string;
   alias: string;
-  address: { network: string; addr: string }[];
+  addresses: { network: string; addr: string }[];
   color: string;
   features: {
     [key: number]: { name: string; is_required: boolean; is_known: boolean };
@@ -60,4 +60,4 @@ type metadata =
 
 type graphAndMetaData = { graph: graph, metadata: metadata };
 
-export type { jsonNode, jsonEdge, jsonGraph, node, edge, graph, metadata, graphAndMetaData };
+export type { nodePolicy, jsonNode, jsonEdge, jsonGraph, nodeId, edgeId, node, edge, graph, metadata, graphAndMetaData };

@@ -1,6 +1,6 @@
 import React from "react";
-import type { graphAndMetaData, node, edge } from "shared";
-import type {options} from "../pages/index";
+import type { graphAndMetaData, nodeId  } from "shared";
+import type { options, element, state } from "../pages/index";
 import { fold, none, some, Option } from "fp-ts/option";
 import { identity, constant, pipe } from "fp-ts/function";
 
@@ -9,13 +9,18 @@ const ForceGraph3D = dynamic(() => import('react-force-graph')
   .then(x => x.ForceGraph3D, _ => null as never));
 
 type Props = {
-  graphAndMetaData: graphAndMetaData;
-  options: options
+  graphAndMetaData: graphAndMetaData,
+  options: options,
+  state: state,
+  setState: React.Dispatch<React.SetStateAction<state>>
 }
 
-const Graph = ({ graphAndMetaData, options }: Props) => {
+const Graph = ({ graphAndMetaData, state, options, setState }: Props) => {
   const { graph, metadata } = graphAndMetaData;
   let [graphComponent, setGraphComponent] = React.useState<Option<JSX.Element>>(none);
+
+  const handleClick = (id: nodeId) =>  setState(state => ({ ...state, selected: some(id) }));
+  const handleHover = (id: nodeId) => setState(state => ({ ...state, hovered: some(id) }));
 
   React.useEffect(() => {
     /* Filter the set of node connections by their connection amount */
@@ -48,12 +53,13 @@ const Graph = ({ graphAndMetaData, options }: Props) => {
         linkVisibility={true}
         linkCurvature={0.1}
         nodeResolution={6}
-        nodeRelSize={nodes.length / 150}
+        nodeRelSize={Math.sqrt(nodes.length) / 5}
         warmupTicks={25}
         cooldownTicks={1}
         numDimensions={3}
         dagMode={options.forceMode}
-        onNodeClick={(n, _) => alert(n.id)}
+        onNodeClick={(n, _) => n.id && (typeof n.id == "string") && handleClick(n.id)}
+        onNodeHover={(n, _) => n && n.id && (typeof n.id == "string") && handleHover(n.id)}
         enablePointerInteraction={true}
         enableNodeDrag={false}
         rendererConfig={{
@@ -61,7 +67,7 @@ const Graph = ({ graphAndMetaData, options }: Props) => {
           alpha: true,
           powerPreference: "high-performance",
         }}
-        graphData={{nodes, links}}
+        graphData={{ nodes, links }}
       />
     ))
   }, [options]);

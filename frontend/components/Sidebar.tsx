@@ -1,23 +1,28 @@
 import React from "react";
 import styled from 'styled-components'
-import type { metadata, graphAndMetaData, node, edge } from "shared";
-import type { options } from "../pages/index";
+import type { metadata, nodeId } from "shared";
+import type { options, state } from "../pages/index";
 import { Range } from "./Range";
+import { Node } from "./Node";
+import { NodeEdges } from "./NodeEdges";
 import { Segment } from "./Segment";
-import { fold, none, some, Option } from "fp-ts/option";
-import { identity, constant, pipe } from "fp-ts/function";
+import { some, Option, fold } from "fp-ts/option";
+import { constant, pipe } from "fp-ts/function";
 
 // The setOptions is just a function from Option<option> to void, not sure what the need for that function signature is..
 type Props = {
   metadata: metadata,
-  options: options
+  options: options,
+  state: state,
   setOptions: React.Dispatch<React.SetStateAction<Option<options>>>
 }
 
 const Container = styled.div`
   z-index: 999;
   position: fixed;
-  width: 20vw;
+  width: 25vw;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
   top: 1rem;
   padding: 0.25rem 1.5rem 0.75rem;
   right: 1rem;
@@ -32,7 +37,7 @@ const FootNote = styled.p`
   font-weight: 400;
 `;
 
-const Sidebar = ({ metadata, options, setOptions }: Props) => {
+const Sidebar = ({ metadata, options, setOptions, state }: Props) => {
 
   const handleRangeUpdate = (prop: string) => (event: React.SyntheticEvent) => {
     const target = event.target as HTMLInputElement; // Wet? This should really be inferrable... 
@@ -65,9 +70,25 @@ const Sidebar = ({ metadata, options, setOptions }: Props) => {
         title="Force Mode"
         current={options.forceMode}
         handleUpdate={handleForceModeUpdate}
-        segments={[{ name: "Radial In", value: "radialin"}, {name: "Radial Out", value: "radialout"}]}
+        segments={[{ name: "Radial In", value: "radialin" }, { name: "Radial Out", value: "radialout" }]}
       />
       <FootNote>Big ranges may result in slow rendering</FootNote>
+
+      {
+        pipe(
+          state.selected,
+          fold(
+            constant(<FootNote>No node selected</FootNote>),
+            ((selected: nodeId) => {
+              return (<>
+                <Node nodeId={selected} />
+                <NodeEdges nodeId={selected} />
+              </>)
+            })
+          )
+        )
+      }
+
     </Container>
   )
 };

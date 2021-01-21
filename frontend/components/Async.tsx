@@ -40,12 +40,12 @@ const Async = <Data extends unknown>({
         setErrMessage(some(err));
         setState(State.Error);
       });
-  }, []);
+  }, [url]);
 
   switch (state) {
     case State.Initial:
     case State.Loading:
-      return <>Loading</>;
+      return <div>Loading...</div>;
     case State.Success:
       return pipe(
         data,
