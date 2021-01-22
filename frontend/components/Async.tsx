@@ -11,7 +11,7 @@ enum State {
 }
 
 type Props<Data> = {
-  children: never[]; // Not sure why this is necessary...
+  children?: never[]; // Not sure why this is necessary...
   url: string;
   callback?: (x: Data) => void;
   render: (x: Data) => JSX.Element;

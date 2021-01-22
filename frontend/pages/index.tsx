@@ -55,7 +55,6 @@ const Page = () => {
                 <Graph
                   graphAndMetaData={data}
                   options={options}
-                  state={state}
                   setState={setState}
                 />
                 <Sidebar

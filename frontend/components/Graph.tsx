@@ -15,15 +15,17 @@ const ForceGraph3D = dynamic(() =>
 type Props = {
   graphAndMetaData: graphAndMetaData;
   options: options;
-  state: state;
   setState: React.Dispatch<React.SetStateAction<state>>;
 };
 
-const Graph = ({ graphAndMetaData, state, options, setState }: Props) => {
+type graphData = {
+  nodes: Array<{ id: nodeId }>;
+  links: Array<{ source: nodeId; target: nodeId }>;
+};
+
+const Graph = ({ graphAndMetaData, options, setState }: Props) => {
   const { graph, metadata } = graphAndMetaData;
-  let [graphComponent, setGraphComponent] = React.useState<Option<JSX.Element>>(
-    none
-  );
+  let [graphData, setGraphData] = React.useState<Option<graphData>>(none);
 
   const handleClick = (id: nodeId) =>
     setState((state) => ({ ...state, selected: some(id) }));
@@ -53,40 +55,42 @@ const Graph = ({ graphAndMetaData, state, options, setState }: Props) => {
       }
     }
 
-    setGraphComponent(
-      some(
-        <ForceGraph3D
-          linkColor={"#2c3b7c"}
-          nodeOpacity={1}
-          nodeAutoColorBy={"#95dffd"}
-          linkVisibility={true}
-          linkCurvature={0.1}
-          nodeResolution={6}
-          nodeRelSize={Math.sqrt(nodes.length) / 5}
-          warmupTicks={25}
-          cooldownTicks={1}
-          numDimensions={3}
-          dagMode={options.forceMode}
-          onNodeClick={(n, _) =>
-            n.id && typeof n.id == "string" && handleClick(n.id)
-          }
-          onNodeHover={(n, _) =>
-            n && n.id && typeof n.id == "string" && handleHover(n.id)
-          }
-          enablePointerInteraction={true}
-          enableNodeDrag={false}
-          rendererConfig={{
-            antialias: false,
-            alpha: true,
-            powerPreference: "high-performance",
-          }}
-          graphData={{ nodes, links }}
-        />
-      )
-    );
+    /* Update graph with new data */
+    setGraphData(some({ nodes, links }));
   }, [options]);
 
-  return pipe(graphComponent, fold(constant(<>Loading...</>), identity));
+  return pipe(
+    graphData,
+    fold(constant(<>Loading...</>), (graphData) => (
+      <ForceGraph3D
+        linkColor={"#2c3b7c"}
+        nodeOpacity={1}
+        nodeAutoColorBy={"#95dffd"}
+        linkVisibility={true}
+        linkCurvature={0.1}
+        nodeResolution={6}
+        nodeRelSize={Math.sqrt(graphData.nodes.length) / 5}
+        warmupTicks={25}
+        cooldownTicks={1}
+        numDimensions={3}
+        dagMode={options.forceMode}
+        onNodeClick={(n, _) =>
+          n.id && typeof n.id == "string" && handleClick(n.id)
+        }
+        onNodeHover={(n, _) =>
+          n && n.id && typeof n.id == "string" && handleHover(n.id)
+        }
+        enablePointerInteraction={true}
+        enableNodeDrag={false}
+        rendererConfig={{
+          antialias: false,
+          alpha: true,
+          powerPreference: "high-performance",
+        }}
+        graphData={graphData}
+      />
+    ))
+  );
 };
 
 export { Graph };
