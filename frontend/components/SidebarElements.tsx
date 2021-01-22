@@ -1,6 +1,6 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
-const LabelTitle = styled.label<{ align?: string, fontsize?: number }>`
+const LabelTitle = styled.label<{ align?: string; fontsize?: number }>`
   display: block;
   padding-top: 0.5rem;
   padding-bottom: 0;
@@ -40,9 +40,10 @@ const Divider = styled.div`
   border-radius: 1px;
   background: rgba(44, 59, 124, 0.2);
 `;
-const LabeledElement = ({ label, value }: { label: string, value: string }) =>
+const LabeledElement = ({ label, value }: { label: string; value: string }) => (
   <LabeledElementContainer>
     <Label>{label}</Label>
     <Value>{value}</Value>
   </LabeledElementContainer>
-export { LabelTitle, LabeledElement, Divider }
+);
+export { LabelTitle, LabeledElement, Divider };

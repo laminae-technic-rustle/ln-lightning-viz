@@ -11,11 +11,11 @@ enum State {
 }
 
 type Props<Data> = {
-  children: never[], // Not sure why this is necessary...
+  children: never[]; // Not sure why this is necessary...
   url: string;
   callback?: (x: Data) => void;
   render: (x: Data) => JSX.Element;
-}
+};
 
 const baseUrl = "http://localhost:8080"; // FIXME -- get from Dockerfile
 const Async = <Data extends unknown>({
@@ -49,19 +49,19 @@ const Async = <Data extends unknown>({
     case State.Success:
       return pipe(
         data,
-        fold(
-          constant(<Errors.Unknown />),
-          (data: Data) => render(data)
-        )
-      )
+        fold(constant(<Errors.Unknown />), (data: Data) => render(data))
+      );
     case State.Error:
     default:
       return (
-        <>{pipe(errMessage,
-          fold(
-            constant(<Errors.Unknown />),
-            ((message: string) => <Errors.FromString message={message} />)
-          ))}</>
+        <>
+          {pipe(
+            errMessage,
+            fold(constant(<Errors.Unknown />), (message: string) => (
+              <Errors.FromString message={message} />
+            ))
+          )}
+        </>
       );
   }
 };

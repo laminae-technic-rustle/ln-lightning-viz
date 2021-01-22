@@ -1,5 +1,5 @@
 import React from "react";
-import styled from 'styled-components'
+import styled from "styled-components";
 import type { metadata, nodeId } from "shared";
 import type { options, state } from "../pages/index";
 import { Range } from "./Range";
@@ -11,11 +11,11 @@ import { constant, pipe } from "fp-ts/function";
 
 // The setOptions is just a function from Option<option> to void, not sure what the need for that function signature is..
 type Props = {
-  metadata: metadata,
-  options: options,
-  state: state,
-  setOptions: React.Dispatch<React.SetStateAction<Option<options>>>
-}
+  metadata: metadata;
+  options: options;
+  state: state;
+  setOptions: React.Dispatch<React.SetStateAction<Option<options>>>;
+};
 
 const Container = styled.div`
   z-index: 999;
@@ -38,14 +38,13 @@ const FootNote = styled.p`
 `;
 
 const Sidebar = ({ metadata, options, setOptions, state }: Props) => {
-
   const handleRangeUpdate = (prop: string) => (event: React.SyntheticEvent) => {
-    const target = event.target as HTMLInputElement; // Wet? This should really be inferrable... 
-    setOptions(some({ ...options, [prop]: target.value }))
-  }
+    const target = event.target as HTMLInputElement; // Wet? This should really be inferrable...
+    setOptions(some({ ...options, [prop]: target.value }));
+  };
 
   const handleForceModeUpdate = (forceMode: options["forceMode"]) =>
-    setOptions(some({ ...options, forceMode }))
+    setOptions(some({ ...options, forceMode }));
 
   return (
     <Container>
@@ -70,28 +69,29 @@ const Sidebar = ({ metadata, options, setOptions, state }: Props) => {
         title="Force Mode"
         current={options.forceMode}
         handleUpdate={handleForceModeUpdate}
-        segments={[{ name: "Radial In", value: "radialin" }, { name: "Radial Out", value: "radialout" }]}
+        segments={[
+          { name: "Radial In", value: "radialin" },
+          { name: "Radial Out", value: "radialout" },
+        ]}
       />
       <FootNote>Big ranges may result in slow rendering</FootNote>
 
-      {
-        pipe(
-          state.selected,
-          fold(
-            constant(<FootNote>No node selected</FootNote>),
-            ((selected: nodeId) => {
-              return (<>
+      {pipe(
+        state.selected,
+        fold(
+          constant(<FootNote>No node selected</FootNote>),
+          (selected: nodeId) => {
+            return (
+              <>
                 <Node nodeId={selected} />
                 <NodeEdges nodeId={selected} />
-              </>)
-            })
-          )
+              </>
+            );
+          }
         )
-      }
-
+      )}
     </Container>
-  )
+  );
 };
-
 
 export { Sidebar };

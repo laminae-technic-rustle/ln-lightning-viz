@@ -1,5 +1,5 @@
-import styled from 'styled-components'
-import { LabelTitle } from './SidebarElements';
+import styled from "styled-components";
+import { LabelTitle } from "./SidebarElements";
 
 const RangeContainer = styled.div`
   display: flex;
@@ -15,15 +15,22 @@ const RangeContainer = styled.div`
 `;
 
 type Props = {
-  title: string,
-  prop: string,
-  min: number,
-  max: number,
-  defaultValue: number,
-  handleUpdate: (x: string) => (y: React.MouseEvent) => void
+  title: string;
+  prop: string;
+  min: number;
+  max: number;
+  defaultValue: number;
+  handleUpdate: (x: string) => (y: React.MouseEvent) => void;
 };
 
-const Range = ({ title, prop, min, max, defaultValue, handleUpdate }: Props) => {
+const Range = ({
+  title,
+  prop,
+  min,
+  max,
+  defaultValue,
+  handleUpdate,
+}: Props) => {
   return (
     <>
       <LabelTitle htmlFor={prop}>
@@ -31,7 +38,14 @@ const Range = ({ title, prop, min, max, defaultValue, handleUpdate }: Props) => 
       </LabelTitle>
       <RangeContainer>
         <h4>{min}</h4>
-        <input type="range" onMouseUp={handleUpdate(prop)} min={min} max={max} defaultValue={defaultValue} id={prop} />
+        <input
+          type="range"
+          onMouseUp={handleUpdate(prop)}
+          min={min}
+          max={max}
+          defaultValue={defaultValue}
+          id={prop}
+        />
         <h4>{max}</h4>
       </RangeContainer>
     </>
