@@ -1,6 +1,6 @@
 import React from "react";
 import Errors from "./Errors";
-import { none, some, Option, fold } from "fp-ts/option";
+import { none, some, Option, fold } from "fp-ts/Option";
 import { constant, pipe } from "fp-ts/function";
 
 enum State {

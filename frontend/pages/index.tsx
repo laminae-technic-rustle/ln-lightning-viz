@@ -5,7 +5,7 @@ import type { graphAndMetaData, nodeId } from "shared";
 import { Async } from "../components/Async";
 import { Graph } from "../components/Graph";
 import { Sidebar } from "../components/Sidebar";
-import { fold, none, some, Option } from "fp-ts/option";
+import { fold, none, some, Option } from "fp-ts/Option";
 import { constant, pipe } from "fp-ts/function";
 
 type element = "node" | "edge";

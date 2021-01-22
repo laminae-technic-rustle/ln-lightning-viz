@@ -6,7 +6,7 @@ import { Range } from "./Range";
 import { Node } from "./Node";
 import { NodeEdges } from "./NodeEdges";
 import { Segment } from "./Segment";
-import { some, Option, fold } from "fp-ts/option";
+import { some, Option, fold } from "fp-ts/Option";
 import { constant, pipe } from "fp-ts/function";
 
 // The setOptions is just a function from Option<option> to void, not sure what the need for that function signature is..

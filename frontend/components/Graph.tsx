@@ -1,7 +1,7 @@
 import React from "react";
 import type { graphAndMetaData, nodeId  } from "shared";
-import type { options, element, state } from "../pages/index";
-import { fold, none, some, Option } from "fp-ts/option";
+import type { options, state } from "../pages/index";
+import { fold, none, some, Option } from "fp-ts/Option";
 import { identity, constant, pipe } from "fp-ts/function";
 
 import dynamic from 'next/dynamic'
