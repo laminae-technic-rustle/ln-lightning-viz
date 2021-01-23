@@ -4,7 +4,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Fira Sans', sans-serif;
+  background-color: #000110;
 }
 
 a {
@@ -12,6 +12,7 @@ a {
   text-decoration: none;
 }
 
-* {
+*, *:after, *:before {
   box-sizing: border-box;
+  font-family: 'Fira Sans', sans-serif;
 }

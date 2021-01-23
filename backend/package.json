@@ -18,8 +18,8 @@
 	"scripts": {
 		"prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
 		"build": "tsc",
-		"prestart": "yarn run build",
-		"start": "nodemon .",
+		"predev": "yarn run build",
+		"dev": "nodemon .",
 		"server": "node .",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
