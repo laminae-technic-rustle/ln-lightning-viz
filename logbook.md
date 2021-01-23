@@ -291,6 +291,10 @@ let doSomethingWithQueryPid = x =>
     | String(x) => x // My string
     | StringArray(xs) => xs // My list
   };
+// ...
+
+let { pid } = req.query;
+let foo = pid |> Belt.Option.map(doSomethingWithQueryPid);
 ```
 
 /end-rant. 
