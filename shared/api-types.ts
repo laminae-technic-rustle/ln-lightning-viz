@@ -39,25 +39,33 @@ type jsonGraph = {
 
 /* API */
 type nodeId = string;
-type alias = string;
-type node = [nodeId, alias];
+type node = [nodeId];
 
-type edgeId = string;
 type from = nodeId;
 type to = nodeId;
-type edge = [edgeId, from, to];
+type edge = [from, to];
 
 type graph = { nodes: node[]; edges: edge[] };
 
-type metadata =
-  {
-    nodeConnections: { [key: string]: number },
-    min: number,
-    average: number,
-    median: number,
-    max: number,
-  }
+type statistics = {
+  nodeConnectionCount: { [key: string]: number };
+  min: number;
+  average: number;
+  median: number;
+  max: number;
+};
 
-type graphAndMetaData = { graph: graph, metadata: metadata };
+type graphAndStatistics = { graph: graph; statistics: statistics };
 
-export type { nodePolicy, jsonNode, jsonEdge, jsonGraph, nodeId, edgeId, node, edge, graph, metadata, graphAndMetaData };
+export type {
+  nodePolicy,
+  jsonNode,
+  jsonEdge,
+  jsonGraph,
+  nodeId,
+  node,
+  edge,
+  graph,
+  statistics,
+  graphAndStatistics,
+};

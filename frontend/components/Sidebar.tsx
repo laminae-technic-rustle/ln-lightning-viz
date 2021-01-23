@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import type { metadata, nodeId } from "shared";
+import type { statistics, nodeId } from "shared";
 import type { options, state } from "../pages/index";
 import { Range } from "./Range";
 import { Node } from "./Node";
@@ -11,7 +11,7 @@ import { constant, pipe } from "fp-ts/function";
 
 // The setOptions is just a function from Option<option> to void, not sure what the need for that function signature is..
 type Props = {
-  metadata: metadata;
+  statistics: statistics;
   options: options;
   state: state;
   setOptions: React.Dispatch<React.SetStateAction<Option<options>>>;
@@ -37,7 +37,7 @@ const FootNote = styled.p`
   font-weight: 400;
 `;
 
-const Sidebar = ({ metadata, options, setOptions, state }: Props) => {
+const Sidebar = ({ statistics, options, setOptions, state }: Props) => {
   const handleRangeUpdate = (prop: string) => (event: React.SyntheticEvent) => {
     const target = event.target as HTMLInputElement; // Wet? This should really be inferrable...
     setOptions(some({ ...options, [prop]: target.value }));
@@ -52,7 +52,7 @@ const Sidebar = ({ metadata, options, setOptions, state }: Props) => {
       <Range
         title="Minimum Connections"
         prop={"min"}
-        min={metadata.min}
+        min={statistics.min}
         max={options.max}
         defaultValue={options.min}
         handleUpdate={handleRangeUpdate}
@@ -61,7 +61,7 @@ const Sidebar = ({ metadata, options, setOptions, state }: Props) => {
         title="Maximum Connections"
         prop={"max"}
         min={options.min}
-        max={metadata.max}
+        max={statistics.max}
         defaultValue={options.max}
         handleUpdate={handleRangeUpdate}
       />

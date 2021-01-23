@@ -1,6 +1,6 @@
 import Head from "next/head";
 import React from "react";
-import type { graphAndMetaData, nodeId } from "shared";
+import type { graphAndStatistics, nodeId } from "shared";
 import { Async } from "../components/Async";
 import { Graph } from "../components/Graph";
 import { Sidebar } from "../components/Sidebar";
@@ -35,30 +35,30 @@ const Page = () => {
       </Head>
 
       <Async
-        url="/graph-with-metadata"
-        callback={(data: graphAndMetaData) =>
+        url="/graph-with-statistics"
+        callback={(data: graphAndStatistics) =>
           setOptions(
             some({
-              min: data.metadata.min,
-              max: Math.round(data.metadata.average),
+              min: data.statistics.min,
+              max: Math.round(data.statistics.average),
               hovered: none,
               selected: none,
               forceMode: "radialin",
             })
           )
         }
-        render={(data: graphAndMetaData) => {
+        render={(data: graphAndStatistics) => {
           return pipe(
             options,
             fold(constant(<>Loading</>), (options: options) => (
               <>
                 <Graph
-                  graphAndMetaData={data}
+                  graphAndStatistics={data}
                   options={options}
                   setState={setState}
                 />
                 <Sidebar
-                  metadata={data.metadata}
+                  statistics={data.statistics}
                   options={options}
                   setOptions={setOptions}
                   state={state}

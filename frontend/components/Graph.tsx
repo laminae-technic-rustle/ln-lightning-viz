@@ -1,8 +1,8 @@
 import React from "react";
-import type { graphAndMetaData, nodeId } from "shared";
+import type { graphAndStatistics, nodeId } from "shared";
 import type { options, state } from "../pages/index";
 import { fold, none, some, Option } from "fp-ts/Option";
-import { identity, constant, pipe } from "fp-ts/function";
+import { constant, pipe } from "fp-ts/function";
 
 import dynamic from "next/dynamic";
 const ForceGraph3D = dynamic(() =>
@@ -13,7 +13,7 @@ const ForceGraph3D = dynamic(() =>
 );
 
 type Props = {
-  graphAndMetaData: graphAndMetaData;
+  graphAndStatistics: graphAndStatistics;
   options: options;
   setState: React.Dispatch<React.SetStateAction<state>>;
 };
@@ -23,25 +23,23 @@ type graphData = {
   links: Array<{ source: nodeId; target: nodeId }>;
 };
 
-const Graph = ({ graphAndMetaData, options, setState }: Props) => {
-  const { graph, metadata } = graphAndMetaData;
+const Graph = ({ graphAndStatistics, options, setState }: Props) => {
+  const { graph, statistics } = graphAndStatistics;
   let [graphData, setGraphData] = React.useState<Option<graphData>>(none);
 
   const handleClick = (id: nodeId) =>
     setState((state) => ({ ...state, selected: some(id) }));
-  const handleHover = (id: nodeId) =>
-    setState((state) => ({ ...state, hovered: some(id) }));
 
   React.useEffect(() => {
     /* Filter the set of node connections by their connection amount */
     const included: { [key: string]: boolean } = {};
-    for (let [key, value] of Object.entries(metadata.nodeConnections)) {
+    for (let [key, value] of Object.entries(statistics.nodeConnectionCount)) {
       included[key] = value >= options.min && value <= options.max;
     }
 
     /* Filter the nodes by those that are included in the set */
     const nodes: Array<{ id: string }> = [];
-    for (let [id, _] of graph.nodes) {
+    for (let [id] of graph.nodes) {
       if (included[id]) {
         nodes.push({ id });
       }
@@ -49,7 +47,7 @@ const Graph = ({ graphAndMetaData, options, setState }: Props) => {
 
     /* Filter the edges that belong to those nodes */
     const links: Array<{ source: string; target: string }> = [];
-    for (let [_, source, target] of graph.edges) {
+    for (let [source, target] of graph.edges) {
       if (included[source] && included[target]) {
         links.push({ source, target });
       }
@@ -77,8 +75,10 @@ const Graph = ({ graphAndMetaData, options, setState }: Props) => {
         onNodeClick={(n, _) =>
           n.id && typeof n.id == "string" && handleClick(n.id)
         }
-        onNodeHover={(n, _) =>
-          n && n.id && typeof n.id == "string" && handleHover(n.id)
+        onNodeHover={(n) =>
+          n
+            ? (document.body.style.cursor = "pointer")
+            : (document.body.style.cursor = "default")
         }
         enablePointerInteraction={true}
         enableNodeDrag={false}
