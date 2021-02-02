@@ -19,6 +19,13 @@ more about why this is in the [shared readme](shared/README.md).
 yarn config set workspaces-experimental true
 ```
 
+If you don't have yarn, it can be installed as follows:
+
+```
+npm install --global yarn
+```
+
+
 ### Install Dependencies
 Next, install dependencies. Due too the workspaces setup, this command can be
 ran from anywhere within the folders, and it will automatically install the
@@ -52,6 +59,10 @@ the result. Make sure the BE is running in a different tab.
 ## Dockerized
 Note that the docker container used here directly runs the production build of
 next.js. Running this in a production environment will not work.
+
+Note that a prerequisite of this is to have a Docker deamon running, either via
+the [gui](https://www.docker.com/products/docker-desktop) or the 
+[command line](https://docs.docker.com/engine/reference/commandline/dockerd/)
 
 ```bash
 docker-compose up --build
