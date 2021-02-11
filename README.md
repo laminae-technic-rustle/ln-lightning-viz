@@ -19,18 +19,38 @@ more about why this is in the [shared readme](shared/README.md).
 yarn config set workspaces-experimental true
 ```
 
+If you don't have yarn, it can be installed as follows:
+
+```
+npm install --global yarn
+```
+
+
+### Install Dependencies
+Next, install dependencies. Due too the workspaces setup, this command can be
+ran from anywhere within the folders, and it will automatically install the
+dependencies for all packages.
+
+```
+yarn
+```
+
 ### BE
-First, run the development server:
+Note that the backend and frontend should be ran simultaniously
+Run the development server:
 
 ```bash
+cd backend
 yarn dev
 ```
 The server should be running at [http://localhost:8080](http://localhost:8080).
 
 ### FE
-First, run the development server:
+Note that the backend and frontend should be ran simultaniously
+Run the development server:
 
 ```bash
+cd frontend
 yarn dev
 ```
 Open [http://localhost:3000](http://localhost:3000) with your browser to see 
@@ -38,7 +58,11 @@ the result. Make sure the BE is running in a different tab.
 
 ## Dockerized
 Note that the docker container used here directly runs the production build of
-next.js. Running this in production is ill-advised as it will not scale.
+next.js. Running this in a production environment will not work.
+
+Note that a prerequisite of this is to have a Docker deamon running, either via
+the [gui](https://www.docker.com/products/docker-desktop) or the 
+[command line](https://docs.docker.com/engine/reference/commandline/dockerd/)
 
 ```bash
 docker-compose up --build
